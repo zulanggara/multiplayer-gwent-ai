@@ -10,10 +10,7 @@ import {
 export const runtime = "nodejs";
 
 // ✅ FIXED POST
-export async function POST(
-  request: Request,
-  context: { params: { id: string } }
-) {
+export async function POST(request: Request, context: any) {
   const roomId = context.params.id.toUpperCase();
   const body = await request.json().catch(() => ({}));
   const playerId = (body?.playerId ?? "").toString();
@@ -53,10 +50,7 @@ export async function POST(
 }
 
 // ✅ FIXED GET
-export async function GET(
-  request: Request,
-  context: { params: { id: string } }
-) {
+export async function GET(request: Request, context: any) {
   const roomId = context.params.id.toUpperCase();
   const url = new URL(request.url);
   const playerId = url.searchParams.get("playerId") ?? "";
