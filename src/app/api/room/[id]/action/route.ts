@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import {
   dispatchAction,
   playerIndexInRoom,
@@ -11,11 +11,11 @@ export const runtime = "nodejs";
 
 // ✅ FIXED POST
 export async function POST(
-  req: NextRequest,
+  request: Request,
   context: { params: { id: string } }
 ) {
   const roomId = context.params.id.toUpperCase();
-  const body = await req.json().catch(() => ({}));
+  const body = await request.json().catch(() => ({}));
   const playerId = (body?.playerId ?? "").toString();
   const action = body?.action;
 
@@ -54,13 +54,15 @@ export async function POST(
 
 // ✅ FIXED GET
 export async function GET(
-  req: NextRequest,
+  request: Request,
   context: { params: { id: string } }
 ) {
   const roomId = context.params.id.toUpperCase();
-  const playerId = req.nextUrl.searchParams.get("playerId") ?? "";
+  const url = new URL(request.url);
+  const playerId = url.searchParams.get("playerId") ?? "";
 
   const room = await readRoom(roomId);
+
   if (!room) {
     return NextResponse.json(
       { error: "Room not found" },
