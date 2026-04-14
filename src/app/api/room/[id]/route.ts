@@ -5,9 +5,10 @@ export const runtime = "nodejs";
 
 export async function GET(
   req: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
-  const roomId = context.params.id.toUpperCase();
+  const { id } = await context.params;
+  const roomId = id.toUpperCase();
   const playerId = req.nextUrl.searchParams.get("playerId") ?? "";
 
   const room = await readRoom(roomId);

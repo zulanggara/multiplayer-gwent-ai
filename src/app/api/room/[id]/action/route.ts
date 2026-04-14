@@ -9,9 +9,12 @@ import {
 
 export const runtime = "nodejs";
 
-// ✅ FIXED POST
-export async function POST(request: Request, context: any) {
-  const roomId = context.params.id.toUpperCase();
+export async function POST(
+  request: Request,
+  context: { params: Promise<{ id: string }> }
+) {
+  const { id } = await context.params;
+  const roomId = id.toUpperCase();
   const body = await request.json().catch(() => ({}));
   const playerId = (body?.playerId ?? "").toString();
   const action = body?.action;
@@ -49,9 +52,12 @@ export async function POST(request: Request, context: any) {
   });
 }
 
-// ✅ FIXED GET
-export async function GET(request: Request, context: any) {
-  const roomId = context.params.id.toUpperCase();
+export async function GET(
+  request: Request,
+  context: { params: Promise<{ id: string }> }
+) {
+  const { id } = await context.params;
+  const roomId = id.toUpperCase();
   const url = new URL(request.url);
   const playerId = url.searchParams.get("playerId") ?? "";
 
